@@ -194,7 +194,6 @@ loader.load(
     console.log('GLB模型加载成功！', gltf.scene);
  }
 );
-
 // 指示灯
 const spriteMat = new THREE.SpriteMaterial({ color: 0xff0000 });
 const indicator = new THREE.Sprite(spriteMat);
