@@ -432,6 +432,25 @@ document.getElementById('toggle-animation').addEventListener('click', () => {
   document.getElementById('status').textContent = isAnimating ? '运行中' : '已暂停';
 });
 
+// 动画循环
+let materialProgress = 0;
+
+// 动画循环
+function animate() {
+    requestAnimationFrame(animate);
+    
+    if(isAnimating){
+    // 指示灯闪烁动画
+    const time = Date.now() * 0.001;
+    indicator.material.color.setHSL(Math.sin(time), 1, 0.5);
+  
+    }
+    controls.update();
+    composer.render();
+    // renderer.render(scene, camera);
+}
+animate();
+
 //窗口大小自适应
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
