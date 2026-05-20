@@ -407,6 +407,23 @@ window.addEventListener('click', (e) => {
     }
 });
 
+// 初始化后期处理（辉光效果）
+function initPostProcessing() {
+  composer = new EffectComposer(renderer);
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+
+  // 辉光通道：增强指示灯效果
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    0.2, // 强度
+    0.4, // 半径
+    0.3  // 阈值
+  );
+  composer.addPass(bloomPass);
+}
+
+
 //窗口大小自适应
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
