@@ -6,6 +6,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
 
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+
 const gui = new GUI();
 gui.domElement.style.right = '0px';
 gui.domElement.style.width = '240px';
@@ -17,6 +21,26 @@ let tableTop = null;
 //基础场景初始化
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf0f0f0);
+
+const stage1 = new THREE.Mesh(new THREE.BoxGeometry(5, 0.5, 5), new THREE.MeshBasicMaterial({ opacity: 0, transparent: true }));
+stage1.position.set(22,-4,-28); // 区域1坐标
+scene.add(stage1);
+
+// 射线检测虚拟区域
+window.addEventListener('click', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+
+  // 虚拟对象（传入数组）
+  const intersects = raycaster.intersectObjects([stage1]);
+  if (intersects.length > 0) {
+    const clickedStage = intersects[0].object;
+    if (clickedStage === stage1) {
+      alert('点击到区域1：电子显示屏');
+    }
+  }
+});
 
 //透视相机
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
