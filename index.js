@@ -275,6 +275,116 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.clientY;
 });
 
+
+// 外部视角复位按钮
+const outerReviewBtn = document.getElementById('outer-review');
+if (outerReviewBtn) {
+  outerReviewBtn.addEventListener('click', () => {
+    isFirstPerson = false; // 复位时切换回第三人称
+    document.body.style.cursor = 'default';
+    controls.enableRotate = true;
+    camera.position.set(30, 50, 70);
+    controls.target.set(0, 0, 0);
+    controls.update();
+    
+    // 退出内部视角，停止点光源动画
+    isPointLightAnimating = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId); // 取消动画帧，停止循环
+      animationFrameId = null;
+    }
+    // 外部视角时，隐藏开关灯按钮
+    const lightToggleBtn = document.getElementById('light-toggle');
+    if (lightToggleBtn) lightToggleBtn.style.display = 'none';
+  });
+} else {
+  console.warn('外部视角复位按钮（outer-review）未找到，忽略该功能');
+}
+
+// 内部视角复位按钮
+const innerReviewBtn = document.getElementById('inner-review');
+if (innerReviewBtn) {
+  innerReviewBtn.addEventListener('click', () => {
+    isFirstPerson = false; // 复位时切换回第三人称
+    document.body.style.cursor = 'default';
+    controls.enableRotate = true;
+    camera.position.set(24, 7, -13);
+    controls.target.set(24, 0, -24);
+    controls.update();
+
+    // 进入内部视角，启动灯光动画
+    if (!isPointLightAnimating) {
+      isPointLightAnimating = true;
+      // 启动动画循环，获取动画帧ID
+      animationFrameId = requestAnimationFrame(pointLightMoveAnimation);
+    }
+
+    // 显示开关灯按钮
+    const lightToggleBtn = document.getElementById('light-toggle');
+    if (lightToggleBtn) lightToggleBtn.style.display = 'inline-block';
+  });
+} else {
+  console.warn('内部视角复位按钮（inner-review）未找到，忽略该功能');
+}
+
+// 获取开关灯按钮
+const lightToggleBtn = document.getElementById('light-toggle');
+// 记录当前灯的状态（默认关灯）
+let isLightOn = false;
+
+if (!lightToggleBtn) {
+  console.warn('开关灯按钮（light-toggle）未找到，忽略开关灯功能');
+} else {
+  // 内部视角复位时显示开关灯按钮
+  if (innerReviewBtn) {
+    innerReviewBtn.addEventListener('click', () => {
+      lightToggleBtn.style.display = 'inline-block';
+    });
+  }
+
+  // 外部视角复位时隐藏开关灯按钮
+  if (outerReviewBtn) {
+    outerReviewBtn.addEventListener('click', () => {
+      lightToggleBtn.style.display = 'none';
+    });
+  }
+
+  // 开关灯按钮
+  lightToggleBtn.addEventListener('click', () => {
+    if (isLightOn) {
+      lights.ambientLight.intensity = 0;
+      lightToggleBtn.textContent = '开灯';
+    } else {
+      lights.ambientLight.intensity = 2;
+      lightToggleBtn.textContent = '关灯';
+    }
+    isLightOn = !isLightOn;
+    ambientLightFolder.__controllers[0].updateDisplay();
+  });
+}
+
+
+// 灯光动画
+function pointLightMoveAnimation() {
+  if (!lights || !lights.pointLight || !pointLightFolder) {
+    isPointLightAnimating = false;
+    return;
+  }
+
+  animationProgress += pointLightMoveSpeed;
+  const targetX = Math.sin(animationProgress) * pointLightMoveRange;
+  lights.pointLight.position.x = targetX;
+
+  // 稳妥的索引访问，避免报错
+  if (pointLightFolder && pointLightFolder.__controllers && pointLightFolder.__controllers.length > 1) {
+    pointLightFolder.__controllers[1].updateDisplay();
+  }
+
+  if (isPointLightAnimating) {
+    animationFrameId = requestAnimationFrame(pointLightMoveAnimation);
+  }
+}
+
 //窗口大小自适应
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
