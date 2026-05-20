@@ -423,6 +423,14 @@ function initPostProcessing() {
   composer.addPass(bloomPass);
 }
 
+// 动画启停
+let isAnimating = true;
+document.getElementById('toggle-animation').addEventListener('click', () => {
+  isAnimating = !isAnimating;
+  const btn = document.getElementById('toggle-animation');
+  btn.textContent = isAnimating ? '暂停动画' : '启动动画';
+  document.getElementById('status').textContent = isAnimating ? '运行中' : '已暂停';
+});
 
 //窗口大小自适应
 window.addEventListener('resize', () => {
