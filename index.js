@@ -385,6 +385,24 @@ function pointLightMoveAnimation() {
   }
 }
 
+
+// 基础交互与调试：实现“点击舞台显示名称”功能。
+// 点击交互（射线检测）
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+window.addEventListener('click', (e) => {
+    // 转换鼠标坐标为Three.js标准坐标
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    
+    // 检测与舞台的交点
+    const intersects = raycaster.intersectObject(tableTop);
+    if (intersects.length > 0) {
+        alert('舞台：电子显示屏');
+    }
+});
+
 //窗口大小自适应
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
