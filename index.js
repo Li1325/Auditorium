@@ -168,8 +168,6 @@ const spotLightColor = {
   color: lights.spotLight.color.getHex()
 };
 spotLightFolder.addColor(spotLightColor, 'color').name('灯光颜色').onChange(val => lights.spotLight.color.set(val));
-
-
 // 全景图作为场景背景（天空盒）
 const textureLoader = new THREE.TextureLoader();
 const skyTexture = textureLoader.load('sky-8.png'); 
