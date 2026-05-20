@@ -10,6 +10,8 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
 const gui = new GUI();
 gui.domElement.style.right = '0px';
 gui.domElement.style.width = '240px';
