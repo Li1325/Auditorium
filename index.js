@@ -52,7 +52,9 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
-
+// 初始化后期合成器（辉光效果）
+let composer = null;
+initPostProcessing();
 
 // 启用轨道控制器（交互控制相机）
 const controls = new OrbitControls(camera, renderer.domElement);
